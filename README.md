@@ -9,7 +9,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FoodieMart</title>
+  <title>MARTENDO FOODS</title>
 
   <style>
     *{
@@ -172,7 +172,7 @@
 <body>
 
 <header>
-  <div class="logo">FoodieMart</div>
+  <div class="logo">MARTENDOFOODS</div>
 
   <nav>
     <a href="#">Home</a>
@@ -330,7 +330,7 @@
 </section>
 
 <footer>
-  © 2026 FoodieMart | Lagos, Nigeria
+  © 2026 MARTENDO | Lagos, Nigeria
 </footer>
 
 <script>
