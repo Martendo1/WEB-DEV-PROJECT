@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cart & Payment</title>
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Arial, sans-serif;
+    }
+
+    body{
+      background:#f4f4f4;
+      padding:40px 8%;
+    }
+
+    h1{
+      margin-bottom:30px;
+      color:#ff6600;
+    }
+
+    .container{
+      display:grid;
+      grid-template-columns:2fr 1fr;
+      gap:30px;
+    }
+
+    .cart-box,
+    .payment-box{
+      background:white;
+      padding:30px;
+      border-radius:20px;
+      box-shadow:0 5px 15px rgba(0,0,0,.1);
+    }
+
+    .cart-item{
+      display:flex;
+      justify-content:space-between;
+      padding:15px 0;
+      border-bottom:1px solid #ddd;
+      font-size:18px;
+    }
+
+    .total{
+      margin-top:20px;
+      font-size:26px;
+      font-weight:bold;
+      color:#ff6600;
+    }
+
+    .payment-box h2{
+      margin-bottom:20px;
+    }
+
+    input{
+      width:100%;
+      padding:15px;
+      margin-bottom:15px;
+      border:1px solid #ccc;
+      border-radius:10px;
+      font-size:16px;
+    }
+
+    .pay-btn{
+      width:100%;
+      background:#ff6600;
+      color:white;
+      border:none;
+      padding:15px;
+      font-size:18px;
+      border-radius:10px;
+      cursor:pointer;
+    }
+
+    .pay-btn:hover{
+      background:#e65c00;
+    }
+
+    @media(max-width:900px){
+      .container{
+        grid-template-columns:1fr;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+<h1>Your Cart</h1>
+
+<div class="container">
+
+  <div class="cart-box">
+
+    <div id="cart-items"></div>
+
+    <div class="total">
+      Total: ₦<span id="total-price">0</span>
+    </div>
+
+  </div>
+
+  <div class="payment-box">
+
+    <h2>Card Payment</h2>
+
+    <input type="text" id="card-name" placeholder="Card Holder Name">
+
+    <input type="text" id="card-number" placeholder="Card Number">
+
+    <input type="text" id="expiry" placeholder="Expiry Date MM/YY">
+
+    <input type="text" id="cvv" placeholder="CVV">
+
+    <button class="pay-btn" onclick="makePayment()">
+      Pay Now
+    </button>
+
+  </div>
+
+</div>
+
+<script>
+
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+  let cartItems = document.getElementById('cart-items');
+  let totalPrice = document.getElementById('total-price');
+  let total = 0;
+
+  function makePayment(){
+
+  const name = document.getElementById('card-name').value.trim();
+  const number = document.getElementById('card-number').value.trim();
+  const expiry = document.getElementById('expiry').value.trim();
+  const cvv = document.getElementById('cvv').value.trim();
+
+  // 1. Check empty cart
+  if(cart.length === 0){
+    alert('Your cart is empty');
+    return;
+  }
+
+  // 2. Validate name
+  if(name === ''){
+    alert('Enter card holder name');
+    return;
+  }
+
+  // 3. Validate card number (16 digits)
+
+  if (!/^\d{16}$/.test(number)) {
+    alert('Card number must be exactly 16 digits (numbers only)');
+    return;
+  }
+
+  // 4. Validate expiry format MM/YY
+  if(!expiry.includes('/') || expiry.length !== 5){
+    alert('Expiry must be in MM/YY format');
+    return;
+  }
+
+  if (!/^\d{2}\/\d{2}$/.test(expiry)) {
+    alert('Expiry must be in MM/YY format');
+    return;
+}
+  // 5. Validate CVV (3 digits)
+  if (!/^\d{3}$/.test(cvv)) {
+    alert('CVV must be exactly 3 digits (numbers only)');
+    return;
+  }
+
+  // SUCCESS
+  alert('Payment Successful! Your order has been placed.');
+
+  localStorage.removeItem('cart');
+
+  window.location.href = 'jsProject.html';
+}
+
+  
+  function loadCart(){
+
+  cartItems.innerHTML = ""; // 🔥 IMPORTANT FIX
+  total = 0;
+
+  cart.forEach(item => {
+
+    total += item.price;
+
+    cartItems.innerHTML += `
+      <div class="cart-item">
+        <span>${item.name}</span>
+        <span>₦${item.price.toLocaleString()}</span>
+      </div>
+    `;
+  });
+
+  totalPrice.textContent = total.toLocaleString();
+}
+
+window.onload = function(){
+  loadCart();
+};
+
+  
+
+</script>
+
+</body>
+</html>
