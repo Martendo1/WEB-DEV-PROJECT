@@ -1,4 +1,3 @@
-<!-- ========================= index.html ========================= -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -162,9 +161,30 @@
       padding:30px;
       margin-top:60px;
     }
+
+    .toast{
+    position:fixed;
+    bottom:30px;
+    right:30px;
+    background:#28a745;
+    color:#fff;
+    padding:15px 25px;
+    border-radius:10px;
+    font-size:16px;
+    opacity:0;
+    transform:translateY(20px);
+    transition:0.3s;
+    pointer-events:none;
+    box-shadow:0 5px 15px rgba(0,0,0,.2);
+   }
+   .toast.show{
+    opacity:1;
+    transform:translateY(0);
+   }
   </style>
 </head>
 <body>
+  <div id="toast" class="toast"></div>
 
 <header>
   <div class="logo">MARTENDO FOODS</div>
@@ -330,40 +350,54 @@
 
 <script>
 
-localStorage.clear();
+// localStorage.clear();
 
   let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-  updateCartCount();
+// Update cart count when page loads
+updateCartCount();
 
-  function addToCart(name, price){
+function addToCart(name, price){
 
     cart.push({
-      name:name,
-      price:price
+        name: name,
+        price: price
     });
 
     localStorage.setItem('cart', JSON.stringify(cart));
 
     updateCartCount();
 
-    alert(name + ' added to cart');
-  }
+    showToast(name + " added to cart!");
+}
 
-  function updateCartCount(){
-    document.getElementById('cart-count').textContent = cart.length;
-  }
+function updateCartCount(){
+    document.getElementById("cart-count").textContent = cart.length;
+}
 
-  function goToCart(){
-    window.location.href = 'jsProjectcart.html';
+function goToCart(){
+    window.location.href = "jsProjectcart.html";
+}
 
-  }
-
-  function scrollToProducts(){
-    document.getElementById('products').scrollIntoView({
-      behavior:'smooth'
+function scrollToProducts(){
+    document.getElementById("products").scrollIntoView({
+        behavior: "smooth"
     });
-  }
+}
+
+function showToast(message){
+
+    const toast = document.getElementById("toast");
+
+    toast.textContent = message;
+
+    toast.classList.add("show");
+
+    setTimeout(function(){
+        toast.classList.remove("show");
+    }, 2500);
+}
+  
 
 </script>
 
