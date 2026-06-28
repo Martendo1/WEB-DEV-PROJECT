@@ -113,7 +113,13 @@
 
     <input type="text" id="card-number" placeholder="Card Number">
 
-    <input type="text" id="expiry" placeholder="Expiry Date MM/YY">
+    <input
+    type="text"
+    id="expiry"
+    placeholder="MM/YY"
+    maxlength="5"
+    oninput="formatExpiry(this)"
+>
 
     <input type="text" id="cvv" placeholder="CVV">
 
@@ -131,6 +137,20 @@
   let cartItems = document.getElementById('cart-items');
   let totalPrice = document.getElementById('total-price');
   let total = 0;
+
+  function formatExpiry(input) {
+    let value = input.value.replace(/\D/g, '');
+
+    if (value.length > 4) {
+        value = value.substring(0, 4);
+    }
+
+    if (value.length > 2) {
+        value = value.substring(0, 2) + "/" + value.substring(2);
+    }
+
+    input.value = value;
+}
 
   function makePayment(){
 
@@ -159,15 +179,38 @@
   }
 
   // 4. Validate expiry format MM/YY
-  if(!expiry.includes('/') || expiry.length !== 5){
-    alert('Expiry must be in MM/YY format');
-    return;
-  }
-
-  if (!/^\d{2}\/\d{2}$/.test(expiry)) {
-    alert('Expiry must be in MM/YY format');
+  // Validate expiry format MM/YY
+if (!/^\d{2}\/\d{2}$/.test(expiry)) {
+    alert("Expiry must be in MM/YY format.");
     return;
 }
+
+const [month, year] = expiry.split('/').map(Number);
+
+// Month must be 01-12
+if (month < 1 || month > 12) {
+    alert("Enter a valid month (01-12).");
+    return;
+}
+
+// Current date
+const today = new Date();
+
+// Card expires at the END of the expiry month
+const expiryDate = new Date(2000 + year, month, 0, 23, 59, 59);
+
+// Reject expired cards
+if (expiryDate < today) {
+    alert("This card has expired.");
+    return;
+}
+
+// Optional: Reject years more than 10 years ahead
+if (year > (today.getFullYear() % 100) + 10) {
+    alert("Enter a valid expiry year.");
+    return;
+}
+
   // 5. Validate CVV (3 digits)
   if (!/^\d{3}$/.test(cvv)) {
     alert('CVV must be exactly 3 digits (numbers only)');
